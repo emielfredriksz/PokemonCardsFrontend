@@ -16,6 +16,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final ApiService api = ApiService();
   List<PokemonCard> cards = [];
+  List<String> setList = ["base1", "base2", "base3"];
+  int i = 0;
 
   //void _loadImage() {
   //  setState(() {
@@ -36,11 +38,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    loadCards();
+    loadCards(setList[i]);
+    i++;
   }
 
-  Future<void> loadCards() async {
-    final data = await api.getCards();
+  Future<void> loadCards(String setId) async {
+    List<PokemonCard> data = await api.getCardsPerSet(setId);
 
     setState(() {
       cards = data;
@@ -104,6 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                         child: CachedNetworkImage(
                           imageUrl: cards[index].imageUrl,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -137,6 +142,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(i);
+          loadCards(setList[i]);
+          i++;
+          if (i > 2) i = 0;
+        },
       ),
     );
   }

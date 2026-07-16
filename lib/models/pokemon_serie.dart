@@ -1,27 +1,27 @@
-class PokemonCard {
+class PokemonSerie {
   final String id;
   final String name;
   final String localId;
   final String imageUrl;
 
-  PokemonCard({
+  PokemonSerie({
     required this.id,
     required this.name,
     required this.localId,
     required this.imageUrl,
   });
 
-  factory PokemonCard.fromJson(Map<String, dynamic> json) {
-    return PokemonCard(
+  factory PokemonSerie.fromJson(Map<String, dynamic> json) {
+    return PokemonSerie(
       id: json["id"],
       name: json["name"],
       localId: json["localId"],
-      imageUrl: json["image"] + "/low.jpg",
+      imageUrl: json["image"] + "/high.jpg",
     );
   }
 }
 
-int compareCardIds(PokemonCard a, PokemonCard b) {
+int compareCardIds(PokemonSerie a, PokemonSerie b) {
   final aId = int.tryParse(a.localId);
   final bId = int.tryParse(b.localId);
 
