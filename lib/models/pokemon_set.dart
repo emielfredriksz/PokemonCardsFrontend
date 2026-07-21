@@ -1,39 +1,41 @@
-class PokemonSet {
+class Set {
   final String id;
+  final String serieId;
   final String name;
-  final String localId;
-  final String imageUrl;
+  final String? logo;
+  final String? symbol;
+  final DateTime releaseDate;
+  final int totalCardCount;
+  final int officialCardCount;
+  final int secretCardCount;
 
-  PokemonSet({
+  Set({
     required this.id,
+    required this.serieId,
     required this.name,
-    required this.localId,
-    required this.imageUrl,
+    required this.logo,
+    required this.symbol,
+    required this.releaseDate,
+    required this.totalCardCount,
+    required this.officialCardCount,
+    required this.secretCardCount,
   });
 
-  factory PokemonSet.fromJson(Map<String, dynamic> json) {
-    return PokemonSet(
+  factory Set.fromJson(Map<String, dynamic> json) {
+    return (Set(
       id: json["id"],
+      serieId: json["serieId"],
       name: json["name"],
-      localId: json["localId"],
-      imageUrl: json["image"] + "/high.jpg",
-    );
+      logo: json["logo"] != null ? "${json["logo"]}.webp" : null,
+      symbol: json["symbol"] != null ? "${json["symbol"]}.webp" : null,
+      releaseDate: DateTime.parse(json["releaseDate"]),
+      totalCardCount: json["totalCardCount"],
+      officialCardCount: json["officialCardCount"],
+      secretCardCount: json["secretCardCount"],
+    ));
   }
 }
 
-int compareCardIds(PokemonSet a, PokemonSet b) {
-  final aId = int.tryParse(a.localId);
-  final bId = int.tryParse(b.localId);
-
-  if (aId == null && bId == null) {
-    return a.localId.compareTo(b.localId);
-  }
-  if (aId == null && bId != null) {
-    return -1;
-  }
-  if (aId != null && bId == null) {
-    return 1;
-  }
-  if (aId! < bId!) return -1;
-  return 1;
+int compareSets(Set a, Set b) {
+  return a.releaseDate.compareTo(b.releaseDate);
 }

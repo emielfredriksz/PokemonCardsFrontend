@@ -1,27 +1,38 @@
-class PokemonCard {
+class Card {
   final String id;
   final String name;
   final String localId;
-  final String imageUrl;
+  final String? imageUrl;
+  bool inCollection;
+  bool wanted;
+  bool favorite;
 
-  PokemonCard({
+  bool changed = false;
+
+  Card({
     required this.id,
     required this.name,
     required this.localId,
     required this.imageUrl,
+    required this.inCollection,
+    required this.wanted,
+    required this.favorite,
   });
 
-  factory PokemonCard.fromJson(Map<String, dynamic> json) {
-    return PokemonCard(
+  factory Card.fromJson(Map<String, dynamic> json) {
+    return Card(
       id: json["id"],
       name: json["name"],
       localId: json["localId"],
-      imageUrl: json["image"] + "/low.jpg",
+      imageUrl: json["image"] != null ? "${json["image"]}/low.webp" : null,
+      inCollection: json["inCollection"],
+      wanted: json["wanted"],
+      favorite: json["favorite"],
     );
   }
 }
 
-int compareCardIds(PokemonCard a, PokemonCard b) {
+int compareCardIds(Card a, Card b) {
   final aId = int.tryParse(a.localId);
   final bId = int.tryParse(b.localId);
 
@@ -36,4 +47,30 @@ int compareCardIds(PokemonCard a, PokemonCard b) {
   }
   if (aId! < bId!) return -1;
   return 1;
+}
+
+class UserCard {
+  final String cardId;
+  final int userId;
+  bool? inCollection;
+  bool? wanted;
+  bool? favorite;
+
+  UserCard({
+    required this.cardId,
+    required this.userId,
+    required this.inCollection,
+    required this.wanted,
+    required this.favorite,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "cardId": cardId,
+      "userId": userId,
+      "inCollection": inCollection,
+      "wanted": wanted,
+      "favorite": favorite,
+    };
+  }
 }

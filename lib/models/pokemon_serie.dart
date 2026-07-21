@@ -1,39 +1,29 @@
-class PokemonSerie {
+class Serie {
   final String id;
   final String name;
-  final String localId;
-  final String imageUrl;
+  final String? logo;
+  final String language;
+  final DateTime releaseDate;
 
-  PokemonSerie({
+  Serie({
     required this.id,
     required this.name,
-    required this.localId,
-    required this.imageUrl,
+    required this.logo,
+    required this.language,
+    required this.releaseDate,
   });
 
-  factory PokemonSerie.fromJson(Map<String, dynamic> json) {
-    return PokemonSerie(
+  factory Serie.fromJson(Map<String, dynamic> json) {
+    return Serie(
       id: json["id"],
       name: json["name"],
-      localId: json["localId"],
-      imageUrl: json["image"] + "/high.jpg",
+      logo: json["logo"] != null ? "${json["logo"]}.webp" : null,
+      language: json["language"],
+      releaseDate: DateTime.parse(json["releaseDate"]),
     );
   }
 }
 
-int compareCardIds(PokemonSerie a, PokemonSerie b) {
-  final aId = int.tryParse(a.localId);
-  final bId = int.tryParse(b.localId);
-
-  if (aId == null && bId == null) {
-    return a.localId.compareTo(b.localId);
-  }
-  if (aId == null && bId != null) {
-    return -1;
-  }
-  if (aId != null && bId == null) {
-    return 1;
-  }
-  if (aId! < bId!) return -1;
-  return 1;
+int compareSeries(Serie a, Serie b) {
+  return a.releaseDate.compareTo(b.releaseDate);
 }

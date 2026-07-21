@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myapp/widgets/tab_button.dart';
 import 'package:myapp/models/pokemon_card.dart';
-import '../services/api_service.dart';
+import '../services/card_service.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -14,43 +14,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final ApiService api = ApiService();
-  List<PokemonCard> cards = [];
-  List<String> setList = ["base1", "base2", "base3"];
-  int i = 0;
-
-  //void _loadImage() {
-  //  setState(() {
-  //    while (number < 200) {
-  //      cards.add(
-  //        new PokemonCard(
-  //          id: (number.toString()),
-  //          name: number.toString(),
-  //          imageUrl:
-  //              'https://assets.tcgdex.net/en/swsh/swsh3/$number/high.jpg',
-  //        ),
-  //      );
-  //      number++;
-  //    }
-  //  });
-  //}
-
-  @override
-  void initState() {
-    super.initState();
-    loadCards(setList[i]);
-    i++;
-  }
-
-  Future<void> loadCards(String setId) async {
-    List<PokemonCard> data = await api.getCardsPerSet(setId);
-
-    setState(() {
-      cards = data;
-      cards.sort(compareCardIds);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,71 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
-          Expanded(
-            child: GridView.builder(
-              itemCount: cards.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.8,
-              ),
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    // IMAGE
-                    Positioned.fill(
-                      child: GestureDetector(
-                        onTap: () {
-                          print(
-                            "Clicked card ${cards[index].name} with url ${cards[index].imageUrl}",
-                          );
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: cards[index].imageUrl,
-                          placeholder: (context, url) =>
-                              const Center(child: CircularProgressIndicator()),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-
-                    // BUTTON (top-right corner)
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () {
-                          print("Favorited card ${cards[index].name}");
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Icon(
-                            Icons.favorite_border,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(i);
-          loadCards(setList[i]);
-          i++;
-          if (i > 2) i = 0;
-        },
       ),
     );
   }
